@@ -34,6 +34,30 @@ angular.module('gaasClientApp.projects', ['ngRoute'])
         project.trackers.push(its);
     };
 
+    $scope.check_projects = function() {
+        // Check in projects and repos are valid
+        var devel_url = "http://localhost:5000"
+        var url = devel_url + '/api/check_projects'
+        console.log(url);
+
+        var headers = {
+                "Content-Type": 'application/json'
+        };
+
+        $scope.checking = true;
+        $http({method:'POST',url:url, data:$scope.projects, headers: headers})
+        .success(function(data, status, headers, config) {
+            console.log(data);
+            $scope.checking = false;
+        })
+        .error(function(data,status,headers,config){
+            console.log("Error in projects urls " + data);
+            $scope.error = data;
+            $scope.checking = false;
+        });
+
+    }
+
     $scope.save_projects = function() {
         // Send using POST all projects and repos to the server
         // The server will check all new URLs and return the result of the operation

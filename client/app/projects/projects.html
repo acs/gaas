@@ -1,0 +1,17 @@
+<div class="row">
+  <h3>Projects for the Dashboard</h3>
+</div>
+
+<div class="row" style="max-width: 400px;">
+  <ul>
+    <li ng-repeat="(key, project) in projects">{{key}}
+      <ul>
+        <li ng-repeat="(ds_name, ds_list) in project">{{ds_name}}
+          <ul>
+            <li ng-repeat="ds_url in ds_list">{{ds_url}}
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>

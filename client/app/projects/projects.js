@@ -15,7 +15,6 @@ angular.module('gaasClientApp.projects', ['ngRoute'])
         console.log(devel_url + '/api/projects');
         $http.get(devel_url + '/api/projects').success(function(data) {
             console.log(data);
-            // SCM should be converted from "," separates list to an array
             $scope.projects = data;
         });
     };
@@ -34,6 +33,15 @@ angular.module('gaasClientApp.projects', ['ngRoute'])
         project.source.push(scm);
         project.trackers.push(its);
     };
+
+    $scope.save_projects = function() {
+        // Send using POST all projects and repos to the server
+        // The server will check all new URLs and return the result of the operation
+    }
+
+    $scope.create_dash = function() {
+        // Create a dash. How the progress will be communicate? WebSockets?
+    }
 
 
     $scope.load_projects();

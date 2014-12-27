@@ -10,8 +10,10 @@ angular.module('gaasClientApp.projects', ['ngRoute'])
 }])
 
 .controller('ProjectsCtl', ['$scope', '$http', '$timeout', function($scope, $http, $timeout) {
+
+    var devel_url = "http://localhost:5000"
+
     $scope.load_projects = function(org_name) {
-        var devel_url = "http://localhost:5000"
         console.log(devel_url + '/api/projects');
         $http.get(devel_url + '/api/projects').success(function(data) {
             console.log(data);
@@ -36,7 +38,6 @@ angular.module('gaasClientApp.projects', ['ngRoute'])
 
     $scope.check_projects = function() {
         // Check in projects and repos are valid
-        var devel_url = "http://localhost:5000"
         var url = devel_url + '/api/check_projects'
         console.log(url);
 
@@ -48,6 +49,7 @@ angular.module('gaasClientApp.projects', ['ngRoute'])
         $http({method:'POST',url:url, data:$scope.projects, headers: headers})
         .success(function(data, status, headers, config) {
             console.log(data);
+            $scope.message = data;
             $scope.checking = false;
         })
         .error(function(data,status,headers,config){
@@ -55,12 +57,31 @@ angular.module('gaasClientApp.projects', ['ngRoute'])
             $scope.error = data;
             $scope.checking = false;
         });
-
     }
 
-    $scope.save_projects = function() {
-        // Send using POST all projects and repos to the server
-        // The server will check all new URLs and return the result of the operation
+    $scope.create_projects_file = function() {
+        // Create the dash config file
+        // Check in projects and repos are valid
+        var url = devel_url + '/api/create_projects_file'
+        console.log(url);
+
+        var headers = {
+                "Content-Type": 'application/json'
+        };
+
+        $scope.checking = true;
+        $http({method:'POST',url:url, data:$scope.projects, headers: headers})
+        .success(function(data, status, headers, config) {
+            console.log(data);
+            $scope.message = data;
+            $scope.checking = false;
+        })
+        .error(function(data,status,headers,config){
+            console.log("Error creating dash config " + data);
+            $scope.error = data;
+            $scope.checking = false;
+        });
+
     }
 
     $scope.create_dash = function() {

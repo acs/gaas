@@ -30,8 +30,16 @@
     ERROR: {{error}}
 </div>
 
+<div data-ng-show="message != undefined" style="margin-top:10px"
+        class="alert alert-success alert-dismissable">
+  <button type="button" class="close" data-ng-click="message = undefined"
+    aria-hidden="true">&times;</button>
+    Result: {{message}}
+</div>
+
+
 <div class="row" style="max-width: 600px; margin-top: 20px">
-  <div class="panel panel-default panel-success">
+  <div class="panel panel-default panel-info">
     <div class="panel-heading">
       Projects in the Dashboard
       <i data-ng-show="checking" class="fa fa-spinner fa-spin fa-3x"></i>
@@ -40,6 +48,9 @@
       </button>
       <button type="button" data-ng-click="check_projects()">
         <span class="fa fa-check" aria-hidden="true"></span>
+      </button>
+      <button type="button" data-ng-click="create_projects_file()">
+        <span class="fa fa-file-archive-o" aria-hidden="true"></span>
       </button>
       <span style="float: right">Filter <input
         ng-model="filter_text">

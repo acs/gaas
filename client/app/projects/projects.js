@@ -103,6 +103,16 @@ angular.module('gaasClientApp.projects', ['ngRoute'])
 
     $scope.create_dash = function() {
         // Create a dash. How the progress will be communicate? WebSockets?
+        console.log("Create web dash");
+        $scope.update_dash_file();
+        var url = devel_url + '/api/webdashboards'+'/'+$scope.dash_selected.name
+        console.log(url);
+        $scope.webing = true;
+        $http.get(url).success(function(data) {
+            console.log(data);
+            $scope.message = data;
+            $scope.webing = false;
+        });
     }
 
     $scope.load_dashes = function() {

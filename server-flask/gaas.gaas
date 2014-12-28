@@ -1,0 +1,4 @@
+[init]
+source = "https://github.com/acs/gaas"
+trackers = "https://api.github.com/repos/acs/gaas/issues"
+

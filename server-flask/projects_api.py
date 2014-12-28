@@ -1,7 +1,8 @@
 from flask import Flask, request, Response
 from ConfigParser import SafeConfigParser
 import json
-from os import path, listdir
+from os import path, listdir, getcwd
+import subprocess
 import urllib
 
 app = Flask(__name__)
@@ -114,6 +115,23 @@ def create_dashboard(dashboard):
             # 502: Bad gateway
             resp = Response(json.dumps(urls_bad), status=502, mimetype='application/json')
             return resp
+
+@app.route("/api/webdashboards/<dashboard>",methods = ['GET'])
+def create_web_dashboard(dashboard):
+    """ Create the dashboard web (real dash)  """
+    automator_path = "/home/acs/devel/Automator"
+    dashs_dir = "dashboards"
+    dash_name = dashboard.split(".")[0]
+    command  = path.join(automator_path,"create_projects.py")
+    command += " -p " + dashboard + " -d " + dashs_dir +" -s -n " +  dash_name
+    res = subprocess.call(command, shell = True)
+    command = path.join(automator_path,"launch.py")
+    command += " -d " + path.join(getcwd(), dashs_dir, dash_name)
+    print command
+    res = subprocess.call(command, shell = True)
+    dash_url = "http://localhost:5000/static/"
+    dash_url +=  dashs_dir +"/"+dash_name+"/tools/VizGrimoireJS/browser/index.html"
+    return dash_url
 
 @app.route("/api/dashboards",methods = ['GET'])
 def get_dashboards():

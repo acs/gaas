@@ -21,8 +21,10 @@ def read_main_conf(conf_file):
         for o in opti:
             # first, some special cases
             if o in ('source','trackers'):
-                data_sources = parser.get(s,o).split(',')
-                options[s][o] = [ds.replace('\n', '') for ds in data_sources]
+                if len(parser.get(s,o))>0:
+                       data_sources = parser.get(s,o).split(',')
+                       options[s][o] = [ds.replace('\n', '') for ds in data_sources]
+                else: options[s][o] = []
             else:
                 options[s][o] = parser.get(s,o)
 
@@ -40,11 +42,16 @@ def create_dash_projects_file(name, projects_data, output_dir):
         return vars
 
     parser = SafeConfigParser()
-    config_file = path.join(output_dir, name + "_gaas.conf")
+    file_name = name;
+    if not file_name.endswith('.gaas'):
+        file_name += ".gaas"
+    config_file = path.join(output_dir, file_name)
 
     fd = open(config_file, 'w')
 
     sections = []
+
+    print projects_data
 
     for project in projects_data:
         parser.add_section(project)
@@ -91,19 +98,18 @@ def check_projects():
             resp = Response(json.dumps(urls_bad), status=502, mimetype='application/json')
             return resp
 
-@app.route("/api/create_projects_file",methods = ['POST'])
-def create_projects_file():
+@app.route("/api/dashboards/<dashboard>",methods = ['POST'])
+def create_dashboard(dashboard):
     """ Create the dash projects file needed to create the real dash  """
+    dashboards_path = '.'
     if request.headers['Content-Type'] == 'application/json':
         print(request.json)
         urls_bad = []
         # urls_bad = check_projects_url(request.json)
         if len(urls_bad) == 0:
-            name = "test"
-            output_dir = "."
             projects_data = request.json
-            create_dash_projects_file(name, projects_data, output_dir)
-            return "Created dash project file for " + name + " project"
+            create_dash_projects_file(dashboard, projects_data, dashboards_path)
+            return "Created dash project file for " + dashboard + " project"
         else:
             # 502: Bad gateway
             resp = Response(json.dumps(urls_bad), status=502, mimetype='application/json')
@@ -115,6 +121,7 @@ def get_dashboards():
     dashboards_path = '.'
     dashboards = [f for f in listdir(dashboards_path) if path.isfile(f) and f.endswith('.gaas')]
     return json.dumps(dashboards)
+
 
 if __name__ == "__main__":
     app.debug = True

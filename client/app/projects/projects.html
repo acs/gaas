@@ -6,7 +6,8 @@
   <span class="h5 ">Select dashboard</span> <select
     ng-model="dash_selected.name" ng-change="select_dash()">
     <option ng-repeat="dash in dashes">{{dash}}</option>
-  </select>
+  </select> <input type="text" ng-model="new_dash">
+  <button data-ng-click="create_dash_file()">Create</button>
 </div>
 
 <div class="row" data-ng-show="dash_selected.name != ''">
@@ -50,7 +51,7 @@
       <button type="button" data-ng-click="check_projects()">
         <span class="fa fa-check" aria-hidden="true"></span>
       </button>
-      <button type="button" data-ng-click="create_projects_file()">
+      <button type="button" data-ng-click="update_dash_file()">
         <span class="fa fa-file-archive-o" aria-hidden="true"></span>
       </button>
       <span style="float: right">Filter <input ng-model="filter_text">
@@ -63,6 +64,7 @@
             <li ng-repeat="(ds_name, ds_list) in project">{{ds_name}}
               <ul>
                 <li ng-repeat="ds_url in ds_list | filter:filter_text ">{{ds_url}}
+
                 
               </ul>
             </li>

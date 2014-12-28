@@ -60,10 +60,20 @@ angular.module('gaasClientApp.projects', ['ngRoute'])
         });
     }
 
-    $scope.create_projects_file = function() {
-        // Create the dash config file
-        // Check in projects and repos are valid
-        var url = devel_url + '/api/create_projects_file'
+    $scope.update_dash_file = function() {
+        var name = $scope.dash_selected.name;
+        var projects = $scope.projects;
+        $scope.create_dash_file (name, projects);
+    }
+
+    $scope.create_dash_file = function(name, projects) {
+        // Create a new dashboard
+        if (name == undefined) {
+            name = $scope.new_dash
+            projects = {"init":{"source":[],"trackers":[]}};
+        }
+        var url = devel_url + '/api/dashboards/' + name
+
         console.log(url);
 
         var headers = {
@@ -71,14 +81,15 @@ angular.module('gaasClientApp.projects', ['ngRoute'])
         };
 
         $scope.checking = true;
-        $http({method:'POST',url:url, data:$scope.projects, headers: headers})
+        $http({method:'POST',url:url, data:projects, headers: headers})
         .success(function(data, status, headers, config) {
             console.log(data);
             $scope.message = data;
             $scope.checking = false;
+            $scope.load_dashes();
         })
         .error(function(data,status,headers,config){
-            console.log("Error creating dash config " + data);
+            console.log("Error creating dash " + data);
             $scope.error = data;
             $scope.checking = false;
         });

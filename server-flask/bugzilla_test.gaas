@@ -1,0 +1,26 @@
+# Repos used for testing purposes in GrimoreLib
+[AutomatorTest]
+
+source = "https://gerrit.wikimedia.org/r/p/mediawiki/extensions/OpenID",
+         "https://gerrit.wikimedia.org/r/p/mediawiki/extensions/SolrStore"
+
+# Changed % to %%
+trackers = "https://bugs.eclipse.org/bugs/buglist.cgi?product=Handly",
+           "https://bugs.eclipse.org/bugs/buglist.cgi?product=Concierge"
+
+# gerrit_url = "gerrit.wikimedia.org"
+# gerrit_projects = "mediawiki/extensions/Cite",
+#                   "mediawiki/extensions/ArticleFeedback"
+
+# mailing_lists = "http://lists.wikimedia.org/pipermail/mediawiki-announce",
+#                 "http://lists.wikimedia.org/pipermail/mediawiki-api-announce"
+
+# Changed % to %%
+# irc_channels = "http://bots.wmflabs.org/~wm-bot/logs/%%23wikimedia-multimedia/%%23wikimedia-multimedia.tar.gz",
+#                "http://bots.wmflabs.org/~wm-bot/logs/%%23wikimedia-fundraising/%%23wikimedia-fundraising.tar.gz"
+
+# mediawiki_sites = "http://openstack.redhat.com"
+
+[AutomatorTest1]
+
+source = "https://gerrit.wikimedia.org/r/p/mediawiki/extensions/RSS"

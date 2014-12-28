@@ -1,7 +1,7 @@
 from flask import Flask, request, Response
 from ConfigParser import SafeConfigParser
 import json
-from os import path
+from os import path, listdir
 import urllib
 
 app = Flask(__name__)
@@ -55,10 +55,10 @@ def create_dash_projects_file(name, projects_data, output_dir):
     parser.write(fd)
     fd.close()
 
-@app.route("/api/projects")
-def projects():
+@app.route("/api/projects/<dash_name>")
+def projects(dash_name):
     """ Return a JSON with all projects data in the dash projects file """
-    config_file = "github_test.conf"
+    config_file = dash_name
     options = read_main_conf(config_file)
     return json.dumps(options)
 
@@ -108,6 +108,13 @@ def create_projects_file():
             # 502: Bad gateway
             resp = Response(json.dumps(urls_bad), status=502, mimetype='application/json')
             return resp
+
+@app.route("/api/dashboards",methods = ['GET'])
+def get_dashboards():
+    """Return a list with the dashboards available"""
+    dashboards_path = '.'
+    dashboards = [f for f in listdir(dashboards_path) if path.isfile(f) and f.endswith('.gaas')]
+    return json.dumps(dashboards)
 
 if __name__ == "__main__":
     app.debug = True

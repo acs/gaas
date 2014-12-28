@@ -13,9 +13,10 @@ angular.module('gaasClientApp.projects', ['ngRoute'])
 
     var devel_url = "http://localhost:5000"
 
-    $scope.load_projects = function(org_name) {
-        console.log(devel_url + '/api/projects');
-        $http.get(devel_url + '/api/projects').success(function(data) {
+    $scope.load_projects = function(dash_name) {
+        var url = devel_url + '/api/projects'+'/'+dash_name
+        console.log(url);
+        $http.get(url).success(function(data) {
             console.log(data);
             $scope.projects = data;
         });
@@ -84,14 +85,23 @@ angular.module('gaasClientApp.projects', ['ngRoute'])
 
     }
 
+    $scope.select_dash = function() {
+        // Select a dash loading all its projects
+        $scope.load_projects($scope.dash_selected.name);
+    }
+
     $scope.create_dash = function() {
         // Create a dash. How the progress will be communicate? WebSockets?
     }
 
-
-    $scope.load_projects();
-    $scope.dashes = {
-            "github":{"name":"github",file:"github_test.conf"},
-            "bugzilla":{"name":"bugzilla",file:"bugzilla_test.conf"}
+    $scope.load_dashes = function() {
+        var url = devel_url + '/api/dashboards'
+        console.log(url);
+        $http.get(url).success(function(data) {
+            $scope.dashes = data;
+        });
     }
+
+    $scope.load_dashes();
+    $scope.dash_selected = {name:""};
 }]);

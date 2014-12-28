@@ -127,6 +127,9 @@ def create_web_dashboard(dashboard):
     res = subprocess.call(command, shell = True)
     command = path.join(automator_path,"launch.py")
     command += " -d " + path.join(getcwd(), dashs_dir, dash_name)
+    res = subprocess.call(command, shell = True)
+    command = "cd " + path.join(dashs_dir, dash_name, "tools","VizGrimoireJS")
+    command += "  && make"
     print command
     res = subprocess.call(command, shell = True)
     dash_url = "http://localhost:5000/static/"

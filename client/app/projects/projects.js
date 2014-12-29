@@ -33,9 +33,41 @@ angular.module('gaasClientApp.projects', ['ngRoute'])
         var project = $scope.projects[$scope.dash_selected['project']];
         var scm = '"https://github.com/' + repo_url + '"';
         var its = '"https://api.github.com/repos/' + repo_url + '/issues"';
-        project.source.push(scm);
-        project.trackers.push(its);
+        if (project.source.indexOf(scm) != -1) {
+            $scope.message = scm + " already exists";
+            return;
+        }
+        $scope.check_urls ([scm, its], function() {
+            project.source.push(scm);
+            project.trackers.push(its);
+            $scope.update_dash_file();
+        });
     };
+
+    $scope.check_urls = function(urls, cb) {
+        // Check urls are valid
+        var url = devel_url + '/api/check_urls'
+        console.log(url);
+
+        var headers = {
+                "Content-Type": 'application/json'
+        };
+
+        $scope.checking = true;
+        $http({method:'POST',url:url, data:urls, headers: headers})
+        .success(function(data, status, headers, config) {
+            console.log(data);
+            $scope.message = data;
+            $scope.checking = false;
+            if (cb != undefined) cb();
+        })
+        .error(function(data,status,headers,config){
+            console.log("Error in urls " + data);
+            $scope.error = " bad URLs: " + data;
+            $scope.checking = false;
+        });
+    }
+
 
     $scope.check_projects = function() {
         // Check in projects and repos are valid
@@ -104,13 +136,17 @@ angular.module('gaasClientApp.projects', ['ngRoute'])
     $scope.create_dash = function() {
         // Create a dash. How the progress will be communicate? WebSockets?
         console.log("Create web dash");
-        $scope.update_dash_file();
         var url = devel_url + '/api/webdashboards'+'/'+$scope.dash_selected.name
         console.log(url);
         $scope.webing = true;
         $http.get(url).success(function(data) {
             console.log(data);
             $scope.message = data;
+            $scope.webing = false;
+        })
+        .error(function(data,status,headers,config){
+            console.log("Error creating web dash " + data);
+            $scope.error = data;
             $scope.webing = false;
         });
     }

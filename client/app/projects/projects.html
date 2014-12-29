@@ -16,7 +16,7 @@
     <button ng-click="create_project(dash_selected.name)">Add</button>
   </div>
   <div class="col-md-8" data-ng-show="dash_selected.name != ''">
-    Github project name <input ng-model="dash_selected['source_url']" size="20">
+    http://github.com/<input ng-model="dash_selected['source_url']" size="20">
     <select ng-model="dash_selected['project']">
       <option ng-repeat="(key, project) in projects">{{key}}</option>
     </select>

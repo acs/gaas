@@ -1,4 +1,4 @@
 [init]
-source = "https://github.com/acs/gaas"
-trackers = "https://api.github.com/repos/acs/gaas/issues"
+source = "https://github.com/acs/gaas","https://github.com/MetricsGrimoire/IRCAnalysis","https://github.com/MetricsGrimoire/Sibyl"
+trackers = "https://api.github.com/repos/acs/gaas/issues","https://api.github.com/repos/MetricsGrimoire/IRCAnalysis/issues","https://api.github.com/repos/MetricsGrimoire/Sibyl/issues"
 

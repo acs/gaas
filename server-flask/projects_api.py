@@ -70,9 +70,15 @@ def projects(dash_name):
     options = read_main_conf(config_file)
     return json.dumps(options)
 
+def check_urls(urls):
+    urls_bad = []
+    for url in urls:
+        if urllib.urlopen(url.replace('"','')).getcode() != 200:
+            urls_bad.append(url)
+    return urls_bad
+
 def check_projects_url(projects):
     """ Check that all urls are valid """
-    urls_bad = []
     urls = []
     projects = request.json
     # Time to check all URLs
@@ -81,10 +87,21 @@ def check_projects_url(projects):
             urls.append(url)
         for url in projects[project]['trackers']:
             urls.append(url)
-        for url in urls:
-            if urllib.urlopen(url.replace('"','')).getcode() != 200:
-                urls_bad.append(url)
+    urls_bad = check_urls (urls)
     return urls_bad
+
+@app.route("/api/check_urls",methods = ['POST'])
+def api_check_urls():
+    """ Check that all projects information is valid, including URLs """
+    if request.headers['Content-Type'] == 'application/json':
+        print(request.json)
+        urls_bad = check_urls(request.json)
+        if len(urls_bad) == 0:
+            return "All URLs are OK"
+        else:
+            # 502: Bad gateway
+            resp = Response(json.dumps(urls_bad), status=502, mimetype='application/json')
+            return resp
 
 @app.route("/api/check_projects",methods = ['POST'])
 def check_projects():
@@ -121,17 +138,29 @@ def create_web_dashboard(dashboard):
     """ Create the dashboard web (real dash)  """
     automator_path = "/home/acs/devel/Automator"
     dashs_dir = "dashboards"
+
+    github_user = ""
+    github_password = ""
+
+    # Create the automator project
     dash_name = dashboard.split(".")[0]
     command  = path.join(automator_path,"create_projects.py")
     command += " -p " + dashboard + " -d " + dashs_dir +" -s -n " +  dash_name
+    if github_user != "":
+        command += " --bicho-user " + github_user + " --bicho-password " + github_password
     res = subprocess.call(command, shell = True)
+
+    # Launch automator project to create the dashboard
     command = path.join(automator_path,"launch.py")
     command += " -d " + path.join(getcwd(), dashs_dir, dash_name)
     res = subprocess.call(command, shell = True)
+
+    # Generate HTML pages from templates
     command = "cd " + path.join(dashs_dir, dash_name, "tools","VizGrimoireJS")
     command += "  && make"
-    print command
     res = subprocess.call(command, shell = True)
+
+    # Return the URL to access the dash
     dash_url = "http://localhost:5000/static/"
     dash_url +=  dashs_dir +"/"+dash_name+"/tools/VizGrimoireJS/browser/index.html"
     return dash_url

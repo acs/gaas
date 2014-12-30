@@ -1,3 +1,4 @@
 .project
 .pydevproject
 client/dashboards/
+server-flask/*.gaas

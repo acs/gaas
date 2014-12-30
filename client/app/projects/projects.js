@@ -9,7 +9,7 @@ angular.module('gaasClientApp.projects', ['ngRoute'])
   });
 }])
 
-.controller('ProjectsCtl', ['$scope', '$http', '$timeout', function($scope, $http, $timeout) {
+.controller('ProjectsCtl', ['$scope', '$http', '$timeout', '$sce', function($scope, $http, $timeout, $sce) {
 
     var devel_url = "http://localhost:5000"
 
@@ -141,7 +141,7 @@ angular.module('gaasClientApp.projects', ['ngRoute'])
         $scope.webing = true;
         $http.get(url).success(function(data) {
             console.log(data);
-            $scope.message = data;
+            $scope.message = $sce.trustAsHtml("<a href='"+data+"' target='_blank'>"+data+"</a>");
             $scope.webing = false;
         })
         .error(function(data,status,headers,config){

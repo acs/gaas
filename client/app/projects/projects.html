@@ -35,7 +35,7 @@
   class="alert alert-success alert-dismissable">
   <button type="button" class="close" data-ng-click="message = undefined"
     aria-hidden="true">&times;</button>
-  Result: {{message}}
+  Result: <span ng-bind-html="message"></span>
 </div>
 
 
